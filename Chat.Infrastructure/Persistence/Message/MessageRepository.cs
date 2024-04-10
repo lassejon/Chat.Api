@@ -2,7 +2,7 @@ using Chat.Application.Interfaces;
 
 namespace Chat.Infrastructure.Persistence.Message;
 
-public class MessageRepository : IRepository<Domain.Message.Message, MessageRepository>
+internal class MessageRepository : IRepository<Domain.Message.Message, MessageRepository>
 {
     public Task<Domain.Message.Message> GetByIdAsync(Guid id)
     {

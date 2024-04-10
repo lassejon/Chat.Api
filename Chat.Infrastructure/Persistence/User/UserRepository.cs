@@ -2,7 +2,7 @@ using Chat.Application.Interfaces;
 
 namespace Chat.Infrastructure.Persistence.User;
 
-public class UserRepository : IRepository<Domain.User.User, UserRepository>
+internal class UserRepository : IRepository<Domain.User.User, UserRepository>
 {
     public Task<Domain.User.User> GetByIdAsync(Guid id)
     {
