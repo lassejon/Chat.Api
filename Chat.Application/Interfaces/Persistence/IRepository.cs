@@ -1,10 +1,10 @@
-namespace Chat.Application.Interfaces;
+namespace Chat.Application.Interfaces.Persistence;
 
 public interface IRepository<TEntity, TRepository> where TEntity : class
 {
     Task<TEntity?> GetByIdAsync(Guid id);
     Task<List<TEntity>?> ListAsync();
     Task<TEntity> AddAsync(TEntity entity);
-    Task<bool> UpdateAsync(TEntity entity);
-    Task<bool> DeleteAsync(Guid id);
+    bool Update(TEntity entity);
+    bool Delete(Guid id);
 }

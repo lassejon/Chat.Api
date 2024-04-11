@@ -1,32 +1,62 @@
 using Chat.Application.Interfaces;
-using Chat.Domain.Conversation;
+using Chat.Application.Interfaces.Persistence;
+using Microsoft.EntityFrameworkCore;
+using ConversationModel = Chat.Domain.Conversation.Conversation;
 
-namespace Chat.Infrastructure.Persistence.Conversations;
+namespace Chat.Infrastructure.Persistence.Conversation;
 
-internal class ChatRepository : IRepository<Conversation, ChatRepository>
+internal class ConversationRepository : IConversationRepository<ConversationModel, ConversationRepository>
 {
-    public Task<Conversation> GetByIdAsync(Guid id)
+    private readonly ChatDbContext _dbContext;
+
+    public ConversationRepository(ChatDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
+    }
+    
+    public async Task<List<ConversationModel>?> GetAllByUserIdAsync(Guid id)
+    {
+        var user = await _dbContext.Users
+            .FindAsync(id);
+
+        if (user is null)
+        {
+            
+        }
+
+        return user!.Conversations;
     }
 
-    public Task<List<Conversation>> ListAsync()
+    public async Task<ConversationModel?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Conversations.FindAsync(id);
     }
 
-    public Task<Conversation> AddAsync(Conversation entity)
+    public async Task<List<ConversationModel>?> ListAsync()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Conversations.ToListAsync();
     }
 
-    public Task UpdateAsync(Conversation entity)
+    public async Task<ConversationModel> AddAsync(ConversationModel entity)
     {
-        throw new NotImplementedException();
+        var entityEntry = await _dbContext.Conversations.AddAsync(entity);
+
+        return entityEntry.Entity;
     }
 
-    public Task DeleteAsync(Guid id)
+    public bool Update(ConversationModel entity)
     {
-        throw new NotImplementedException();
+        var entityEntry =  _dbContext.Conversations.Update(entity);
+
+        return entityEntry.State == EntityState.Modified;
+    }
+
+    public bool Delete(Guid id)
+    {
+        var entity = new ConversationModel() { Id = id };
+
+        var entityEntry = _dbContext.Conversations.Remove(entity);
+        
+        return entityEntry.State == EntityState.Deleted;
     }
 }

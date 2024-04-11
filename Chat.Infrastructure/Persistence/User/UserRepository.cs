@@ -1,31 +1,43 @@
-using Chat.Application.Interfaces;
+using Chat.Application.Interfaces.Persistence;
+using Microsoft.EntityFrameworkCore;
+using UserModel = Chat.Domain.User.User;
 
 namespace Chat.Infrastructure.Persistence.User;
 
-internal class UserRepository : IRepository<Domain.User.User, UserRepository>
+internal class UserRepository : IRepository<UserModel, UserRepository>
 {
-    public Task<Domain.User.User> GetByIdAsync(Guid id)
+    private readonly ChatDbContext _dbContext;
+
+    public UserRepository(ChatDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
+    }
+    
+    public async Task<UserModel?> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Users.FindAsync(id);
     }
 
-    public Task<List<Domain.User.User>> ListAsync()
+    public async Task<List<UserModel>?> ListAsync()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Users.ToListAsync();
     }
 
-    public Task<Domain.User.User> AddAsync(Domain.User.User entity)
+    public async Task<UserModel> AddAsync(UserModel entity)
     {
-        throw new NotImplementedException();
+        var entityEntry = await _dbContext.Users.AddAsync(entity);
+        return entityEntry.Entity;
     }
 
-    public Task UpdateAsync(Domain.User.User entity)
+    public bool Update(UserModel entity)
     {
-        throw new NotImplementedException();
+        var entityEntry = _dbContext.Users.Update(entity);
+        return entityEntry.State == EntityState.Modified;
     }
 
-    public Task DeleteAsync(Guid id)
+    public bool Delete(Guid id)
     {
-        throw new NotImplementedException();
+        var entityEntry = _dbContext.Users.Remove(new UserModel { Id = id });
+        return entityEntry.State == EntityState.Deleted;
     }
 }
