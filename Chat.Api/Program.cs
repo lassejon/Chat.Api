@@ -1,3 +1,4 @@
+using Chat.Application.Extensions.Configuration;
 using Chat.Infrastructure.Extensions.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure();
+builder.Services
+    .AddInfrastructure()
+    .AddApplication();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -19,5 +24,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();

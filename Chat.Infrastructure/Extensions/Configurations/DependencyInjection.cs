@@ -20,9 +20,9 @@ public static class DependencyInjection
         services.ConfigureSettings<DatabaseSettings>();
 
         services.AddScoped<IUnitOfWork>(s => s.GetRequiredService<ChatDbContext>());
-        services.AddScoped<IRepository<User, UserRepository>, UserRepository>();
-        services.AddScoped<IRepository<Message, MessageRepository>, MessageRepository>();
-        services.AddScoped<IRepository<Conversation, ConversationRepository>, ConversationRepository>();
+        services.AddScoped<IRepository<User>, UserRepository>();
+        services.AddScoped<IRepository<Message>, MessageRepository>();
+        services.AddScoped<IRepository<Conversation>, ConversationRepository>();
 
         return services;
     }

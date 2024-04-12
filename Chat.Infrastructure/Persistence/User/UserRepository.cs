@@ -4,7 +4,7 @@ using UserModel = Chat.Domain.User.User;
 
 namespace Chat.Infrastructure.Persistence.User;
 
-internal class UserRepository : IRepository<UserModel, UserRepository>
+internal class UserRepository : IRepository<UserModel>
 {
     private readonly ChatDbContext _dbContext;
 

@@ -5,7 +5,7 @@ using ConversationModel = Chat.Domain.Conversation.Conversation;
 
 namespace Chat.Infrastructure.Persistence.Conversation;
 
-internal class ConversationRepository : IConversationRepository<ConversationModel, ConversationRepository>
+internal class ConversationRepository : IConversationRepository<ConversationModel>
 {
     private readonly ChatDbContext _dbContext;
 

@@ -4,7 +4,7 @@ using MessageModel = Chat.Domain.Message.Message;
 
 namespace Chat.Infrastructure.Persistence.Message;
 
-internal class MessageRepository : IRepository<Domain.Message.Message, MessageRepository>
+internal class MessageRepository : IRepository<MessageModel>
 {
     private readonly ChatDbContext _dbContext;
 
