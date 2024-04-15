@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chat.Api.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    [Migration("20240410113510_InitialCreate")]
+    [Migration("20240412093820_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,12 +35,7 @@ namespace Chat.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Conversations");
                 });
@@ -49,9 +44,6 @@ namespace Chat.Api.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChatId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
@@ -70,6 +62,8 @@ namespace Chat.Api.Migrations
 
                     b.HasIndex("ConversationId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Messages");
                 });
 
@@ -84,11 +78,19 @@ namespace Chat.Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Chat.Domain.Conversation.Conversation", b =>
+            modelBuilder.Entity("Participants", b =>
                 {
-                    b.HasOne("Chat.Domain.User.User", null)
-                        .WithMany("Chats")
-                        .HasForeignKey("UserId");
+                    b.Property<Guid>("ConversationsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ConversationsId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("Chat.Domain.Message.Message", b =>
@@ -96,16 +98,34 @@ namespace Chat.Api.Migrations
                     b.HasOne("Chat.Domain.Conversation.Conversation", null)
                         .WithMany("Messages")
                         .HasForeignKey("ConversationId");
+
+                    b.HasOne("Chat.Domain.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Participants", b =>
+                {
+                    b.HasOne("Chat.Domain.Conversation.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chat.Domain.User.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Chat.Domain.Conversation.Conversation", b =>
                 {
                     b.Navigation("Messages");
-                });
-
-            modelBuilder.Entity("Chat.Domain.User.User", b =>
-                {
-                    b.Navigation("Chats");
                 });
 #pragma warning restore 612, 618
         }

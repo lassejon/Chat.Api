@@ -43,9 +43,6 @@ namespace Chat.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -61,6 +58,8 @@ namespace Chat.Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -96,6 +95,14 @@ namespace Chat.Api.Migrations
                     b.HasOne("Chat.Domain.Conversation.Conversation", null)
                         .WithMany("Messages")
                         .HasForeignKey("ConversationId");
+
+                    b.HasOne("Chat.Domain.User.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Participants", b =>
