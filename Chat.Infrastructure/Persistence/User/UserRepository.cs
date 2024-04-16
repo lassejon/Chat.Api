@@ -37,7 +37,7 @@ internal class UserRepository : IRepository<UserModel>
 
     public bool Delete(Guid id)
     {
-        var entityEntry = _dbContext.Users.Remove(new UserModel { Id = id });
+        var entityEntry = _dbContext.Users.Remove(new UserModel { Id = id.ToString() });
         return entityEntry.State == EntityState.Deleted;
     }
 }
