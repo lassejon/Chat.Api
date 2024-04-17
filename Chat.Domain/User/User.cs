@@ -9,7 +9,6 @@ public class User : IdentityUser
     public string? FirstName { get; set; }
     
     public string? LastName { get; set; }
-
-    public DateTime BirthDay { get; set; }
+    
     public List<Conversation.Conversation>? Conversations { get; set; }
 }
