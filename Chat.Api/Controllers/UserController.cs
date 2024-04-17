@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         }
 
         var userModel = new UserResponse(user);
-        return Ok(user);
+        return Ok(userModel);
     }
 
     [HttpPost]

@@ -1,10 +1,5 @@
-using System.Text;
 using Chat.Application.Extensions.Configuration;
-using Chat.Domain.User;
 using Chat.Infrastructure.Extensions.Configurations;
-using Chat.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c => {
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme() {
@@ -57,7 +51,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+
+app.UseRouting();
+
 app.UseAuthorization();
 app.MapControllers();
+
+app.UseCors("ClientPermission");
+
 
 app.Run();

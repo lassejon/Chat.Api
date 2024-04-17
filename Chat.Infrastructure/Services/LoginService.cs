@@ -26,7 +26,7 @@ public class LoginService : ILoginService
         _roleManager = roleManager;
     }
 
-    public async Task<(bool succes, JwtSecurityToken? token)> TryLogin(LoginRequest model)
+    public async Task<JwtTokenResponse> TryLogin(LoginRequest model)
     {
         ValidateLoginModel(model);
         
@@ -34,7 +34,7 @@ public class LoginService : ILoginService
 
         if (!await _userManager.CheckPasswordAsync(user!, model.Password!))
         {
-            return (false, null);
+            return new JwtTokenResponse() { Success = false, Token = null };
         }
         
         var userRoles = await _userManager.GetRolesAsync(user!);
@@ -50,7 +50,7 @@ public class LoginService : ILoginService
 
         var jwtSecurityToken = GetToken(authClaims);
 
-        return (true, jwtSecurityToken);
+        return new JwtTokenResponse() { Success = true, Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken), ValidTo = jwtSecurityToken.ValidTo };
     }
 
     public async Task<RegistrationResponse> Register(RegistrationRequest model, bool retry = true, int retries = 10, int trie = 0)
@@ -84,7 +84,8 @@ public class LoginService : ILoginService
 
     private JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {
-        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]!));
+        var secret = _configuration["JWT:Secret"]!;
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
         var token = new JwtSecurityToken(
             issuer: _configuration["JWT:ValidIssuer"],

@@ -1,6 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
 using Chat.Application.Requests;
-using Chat.Application.Responses;
 using Chat.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,17 +18,13 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        var (success, token) = await _loginService.TryLogin(loginRequest);
+        var jwtTokenResponse = await _loginService.TryLogin(loginRequest);
 
-        if (!success)
+        if (!jwtTokenResponse.Success)
         {
             return Unauthorized();
         }
 
-        return Ok(new JwtTokenResponse
-        {
-            Token = new JwtSecurityTokenHandler().WriteToken(token),
-            ValidTo = token!.ValidTo
-        });
+        return Ok(jwtTokenResponse);
     }
 }
