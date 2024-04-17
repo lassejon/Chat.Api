@@ -61,7 +61,6 @@ public class LoginService : ILoginService
         {
             UserName = model.Email, //$"{model.FirstName?.ReplaceWhitespace()}{model.LastName?.ReplaceWhitespace()}@{RandomGenerator.FourDigits()}",
             Email = model.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
             FirstName = model.FirstName,
             LastName = model.LastName
         };

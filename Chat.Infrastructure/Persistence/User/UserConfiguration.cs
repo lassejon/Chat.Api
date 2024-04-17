@@ -9,10 +9,6 @@ public class UserConfiguration : IEntityTypeConfiguration<UserModel>
     public void Configure(EntityTypeBuilder<UserModel> builder)
     {
         builder
-            .Property(u => u.Id)
-            .HasDefaultValueSql("NEWID()");
-        
-        builder
             .HasKey(u => u.Id)
             .IsClustered(false);
         
