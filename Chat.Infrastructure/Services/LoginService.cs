@@ -16,14 +16,12 @@ namespace Chat.Infrastructure.Services;
 public class LoginService : ILoginService
 {
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public LoginService(UserManager<User> userManager, IConfiguration configuration, RoleManager<IdentityRole> roleManager)
+    public LoginService(UserManager<User> userManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _configuration = configuration;
-        _roleManager = roleManager;
     }
 
     public async Task<JwtTokenResponse> TryLogin(LoginRequest model)
