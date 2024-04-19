@@ -4,7 +4,7 @@ public interface IRepository<TEntity> where TEntity : class
 {
     Task<TEntity?> GetByIdAsync(Guid id);
     Task<List<TEntity>?> ListAsync();
-    Task<TEntity> AddAsync(TEntity entity);
-    bool Update(TEntity entity);
-    bool Delete(Guid id);
+    Task<TEntity> AddAsync(TEntity entity, bool saveChanges = false);
+    Task<bool> Update(TEntity entity, bool saveChanges = false);
+    Task<bool> Delete(Guid id, bool saveChanges = false);
 }

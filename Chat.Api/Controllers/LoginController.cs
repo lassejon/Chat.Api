@@ -1,5 +1,6 @@
 using Chat.Application.Requests;
 using Chat.Application.Services;
+using Chat.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.Api.Controllers;

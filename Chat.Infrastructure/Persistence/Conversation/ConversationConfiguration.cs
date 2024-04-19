@@ -9,9 +9,9 @@ public class ConversationConfiguration : IEntityTypeConfiguration<ConversationMo
 {
     public void Configure(EntityTypeBuilder<ConversationModel> builder)
     {
-        builder
-            .HasMany<UserModel>()
-            .WithMany(e => e.Conversations)
-            .UsingEntity("Participants");
+        // builder
+        //     .HasMany<UserModel>()
+        //     .WithMany(e => e.Conversations)
+        //     .UsingEntity(Participant);
     }
 }

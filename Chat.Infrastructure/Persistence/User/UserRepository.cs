@@ -23,21 +23,39 @@ internal class UserRepository : IRepository<UserModel>
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<UserModel> AddAsync(UserModel entity)
+    public async Task<UserModel> AddAsync(UserModel entity, bool saveChanges = false)
     {
         var entityEntry = await _dbContext.Users.AddAsync(entity);
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        
         return entityEntry.Entity;
     }
 
-    public bool Update(UserModel entity)
+    public async Task<bool> Update(UserModel entity, bool saveChanges = false)
     {
         var entityEntry = _dbContext.Users.Update(entity);
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        
         return entityEntry.State == EntityState.Modified;
     }
 
-    public bool Delete(Guid id)
+    public async Task<bool> Delete(Guid id, bool saveChanges = false)
     {
         var entityEntry = _dbContext.Users.Remove(new UserModel { Id = id.ToString() });
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        
         return entityEntry.State == EntityState.Deleted;
     }
 }

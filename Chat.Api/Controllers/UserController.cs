@@ -1,6 +1,7 @@
 using Chat.Application.Requests;
 using Chat.Application.Responses;
 using Chat.Application.Services;
+using Chat.Application.Services.Interfaces;
 using Chat.Domain.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

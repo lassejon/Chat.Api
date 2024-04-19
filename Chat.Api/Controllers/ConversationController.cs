@@ -1,33 +1,51 @@
-using Chat.Application.Services;
-using Chat.Domain.Message;
+using Chat.Api.Extensions;
+using Chat.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chat.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class ConversationController : ControllerBase
 {
-    private readonly EntityService _entityService;
+    private readonly IConversationService _conversationService;
 
-    public ConversationController(EntityService entityService)
+    public ConversationController(IConversationService conversationService)
     {
-        _entityService = entityService;
+        _conversationService = conversationService;
     }
     
     [HttpPost]
-    public async Task<IActionResult> CreateMessageAsync([FromBody] Message message)
+    public async Task<IActionResult> CreateConversationAsync([FromBody] ConversationRequest conversation)
     {
-        var result = await _entityService.CreateMessageAsync(message);
+        var result = await _conversationService.CreateConversationAsync(conversation);
 
-        return result.Success ? Ok(result.Entity) : BadRequest();
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetConversationByIdAsync(Guid id)
+    {
+        var conversation = await _conversationService.GetConversationByIdAsync(id);
+        return Ok(conversation);
     }
     
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetMessageByIdAsync(Guid id)
+    [HttpGet]
+    public async Task<IActionResult> GetConversations()
     {
-        var result = await _entityService.GetMessageByIdAsync(id);
+        var id = User.GetId();
 
-        return result.Success ? Ok(result.Entity) : NotFound($"Message not found with id: {id}");
+        if (id is null)
+        {
+            return BadRequest("User id not found");
+        }
+        
+        var result = await _conversationService.GetConversationsByUserIdAsync(id.Value);
+
+        return Ok(result);
     }
+    
+    
 }

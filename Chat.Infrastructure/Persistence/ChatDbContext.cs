@@ -1,5 +1,6 @@
 using System.Reflection;
 using Chat.Application.Interfaces;
+using Chat.Domain.Conversation;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UserModel = Chat.Domain.User.User;
@@ -13,6 +14,7 @@ public class ChatDbContext : IdentityDbContext<UserModel>, IUnitOfWork
     public override DbSet<UserModel> Users { get; set; } = null!;
     public DbSet<ConversationModel> Conversations { get; set; } = null!;
     public DbSet<MessageModel> Messages { get; set; } = null!;
+    public DbSet<Participant> Participants { get; set; } = null!;
 
     public ChatDbContext(DbContextOptions options) : base(options)
     {

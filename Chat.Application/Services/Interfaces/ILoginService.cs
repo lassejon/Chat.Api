@@ -1,7 +1,7 @@
 using Chat.Application.Requests;
 using Chat.Application.Responses;
 
-namespace Chat.Application.Services;
+namespace Chat.Application.Services.Interfaces;
 
 public interface ILoginService
 {

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Chat.Application.Requests;
 using Chat.Application.Responses;
-using Chat.Application.Services;
+using Chat.Application.Services.Interfaces;
 using Chat.Domain.User;
 using Chat.Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;

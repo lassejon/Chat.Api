@@ -22,23 +22,38 @@ internal class MessageRepository : IRepository<MessageModel>
         return await _dbContext.Messages.ToListAsync();
     }
 
-    public async Task<MessageModel> AddAsync(MessageModel entity)
+    public async Task<MessageModel> AddAsync(MessageModel entity, bool saveChanges = false)
     {
         var entityEntry = await _dbContext.Messages.AddAsync(entity);
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
         
         return entityEntry.Entity;
     }
 
-    public bool Update(MessageModel entity)
+    public async Task<bool> Update(MessageModel entity, bool saveChanges = false)
     {
         var entityEntry = _dbContext.Messages.Update(entity);
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
         
         return entityEntry.State == EntityState.Modified;
     }
 
-    public bool Delete(Guid id)
+    public async Task<bool> Delete(Guid id, bool saveChanges = false)
     {
         var entityEntry = _dbContext.Messages.Remove(new MessageModel { Id = id });
+        
+        if (saveChanges)
+        {
+            await _dbContext.SaveChangesAsync();
+        }
         
         return entityEntry.State == EntityState.Deleted;
     }

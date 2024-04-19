@@ -9,5 +9,9 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Participants" />
+    </ItemGroup>
 
 </Project>

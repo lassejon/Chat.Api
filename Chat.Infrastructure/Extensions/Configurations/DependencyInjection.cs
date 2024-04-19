@@ -2,6 +2,7 @@ using Chat.Application.Extensions.Configuration;
 using Chat.Application.Interfaces;
 using Chat.Application.Interfaces.Persistence;
 using Chat.Application.Services;
+using Chat.Application.Services.Interfaces;
 using Chat.Domain.Conversation;
 using Chat.Infrastructure.Persistence;
 using Chat.Infrastructure.Settings;
@@ -24,7 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(s => s.GetRequiredService<ChatDbContext>());
         services.AddScoped<IRepository<User>, UserRepository>();
         services.AddScoped<IRepository<Message>, MessageRepository>();
-        services.AddScoped<IRepository<Conversation>, ConversationRepository>();
+        services.AddScoped<IConversationRepository<Conversation>, ConversationRepository>();
 
         services.AddScoped<ILoginService, LoginService>();
 
