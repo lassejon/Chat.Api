@@ -2,8 +2,8 @@ using Chat.Application.Interfaces;
 using Chat.Application.Interfaces.Persistence;
 using Chat.Application.Requests;
 using Chat.Application.Services.Interfaces;
-using Chat.Domain.Conversation;
-using Chat.Domain.Message;
+using Chat.Domain.Conversations;
+using Chat.Domain.Messages;
 
 namespace Chat.Application.Services;
 
@@ -22,16 +22,14 @@ public class ConversationService : IConversationService
     
     public async Task<ConversationResponse> CreateConversationAsync(ConversationRequest conversationRequest)
     {
-        var conversation = await _conversationRepository.AddAsync(conversationRequest.ToConversation());
-        await _unitOfWork.CommitChangesAsync();
+        var conversation = await _conversationRepository.AddAsync(conversationRequest.ToConversation(), saveChanges: true);
 
         return new ConversationResponse(conversation.Id, conversation.CreatedAt);
     }
     
     public async Task AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds)
     {
-        await _conversationRepository.AddParticipants(id, participantIds);
-        await _unitOfWork.CommitChangesAsync();
+        await _conversationRepository.AddParticipants(id, participantIds, saveChanges: true);
     }
     
     public async Task AddMessageAsync(Guid id, MessageRequest messageRequest)

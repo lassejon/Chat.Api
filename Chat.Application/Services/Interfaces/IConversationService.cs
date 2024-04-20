@@ -1,7 +1,7 @@
 using Chat.Application.Requests;
-using Chat.Domain.Conversation;
-using Chat.Domain.Message;
-using Chat.Domain.User;
+using Chat.Domain.Conversations;
+using Chat.Domain.Messages;
+using Chat.Domain.Users;
 
 namespace Chat.Application.Services.Interfaces;
 
@@ -22,7 +22,7 @@ public record ConversationRequest(List<Guid> ParticipantIds, string Name, Messag
     {
         var conversation = new Conversation { Id = Guid.NewGuid(), Name = Name, CreatedAt = DateTime.UtcNow };
         conversation.Messages.Add(Message.ToMessage());
-        conversation.Participants.AddRange(ParticipantIds.Select(p => new User { Id = p.ToString() }));
+        conversation.Users.AddRange(ParticipantIds.Select(p => new User { Id = p.ToString() }));
 
         return conversation;
     }

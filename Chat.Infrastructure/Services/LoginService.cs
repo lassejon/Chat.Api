@@ -4,7 +4,7 @@ using System.Text;
 using Chat.Application.Requests;
 using Chat.Application.Responses;
 using Chat.Application.Services.Interfaces;
-using Chat.Domain.User;
+using Chat.Domain.Users;
 using Chat.Infrastructure.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +41,7 @@ public class LoginService : ILoginService
         {
             new (ClaimTypes.Email, user!.Email!),
             new (CustomClaimTypes.Index, user!.Index.ToString()),
+            new (CustomClaimTypes.Id, user!.Id.ToString()),
             new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString().ToUpper()),
         };
 

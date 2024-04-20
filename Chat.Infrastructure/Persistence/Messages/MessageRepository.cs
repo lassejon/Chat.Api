@@ -1,10 +1,10 @@
 using Chat.Application.Interfaces.Persistence;
+using Chat.Domain.Messages;
 using Microsoft.EntityFrameworkCore;
-using MessageModel = Chat.Domain.Message.Message;
 
-namespace Chat.Infrastructure.Persistence.Message;
+namespace Chat.Infrastructure.Persistence.Messages;
 
-internal class MessageRepository : IRepository<MessageModel>
+internal class MessageRepository : IRepository<Message>
 {
     private readonly ChatDbContext _dbContext;
 
@@ -12,19 +12,19 @@ internal class MessageRepository : IRepository<MessageModel>
     {
         _dbContext = dbContext;
     }
-    public async Task<MessageModel?> GetByIdAsync(Guid id)
+    public async Task<Message?> GetByIdAsync(Guid id)
     {
-        return await _dbContext.Messages.FindAsync(id);
+        return await _dbContext.Message.FindAsync(id);
     }
 
-    public async Task<List<MessageModel>?> ListAsync()
+    public async Task<List<Message>?> ListAsync()
     {
-        return await _dbContext.Messages.ToListAsync();
+        return await _dbContext.Message.ToListAsync();
     }
 
-    public async Task<MessageModel> AddAsync(MessageModel entity, bool saveChanges = false)
+    public async Task<Message> AddAsync(Message entity, bool saveChanges = false)
     {
-        var entityEntry = await _dbContext.Messages.AddAsync(entity);
+        var entityEntry = await _dbContext.Message.AddAsync(entity);
         
         if (saveChanges)
         {
@@ -34,9 +34,9 @@ internal class MessageRepository : IRepository<MessageModel>
         return entityEntry.Entity;
     }
 
-    public async Task<bool> Update(MessageModel entity, bool saveChanges = false)
+    public async Task<bool> Update(Message entity, bool saveChanges = false)
     {
-        var entityEntry = _dbContext.Messages.Update(entity);
+        var entityEntry = _dbContext.Message.Update(entity);
         
         if (saveChanges)
         {
@@ -48,7 +48,7 @@ internal class MessageRepository : IRepository<MessageModel>
 
     public async Task<bool> Delete(Guid id, bool saveChanges = false)
     {
-        var entityEntry = _dbContext.Messages.Remove(new MessageModel { Id = id });
+        var entityEntry = _dbContext.Message.Remove(new Message { Id = id });
         
         if (saveChanges)
         {

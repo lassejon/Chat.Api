@@ -1,10 +1,10 @@
 using Chat.Application.Interfaces.Persistence;
+using Chat.Domain.Users;
 using Microsoft.EntityFrameworkCore;
-using UserModel = Chat.Domain.User.User;
 
-namespace Chat.Infrastructure.Persistence.User;
+namespace Chat.Infrastructure.Persistence.Users;
 
-internal class UserRepository : IRepository<UserModel>
+internal class UserRepository : IRepository<User>
 {
     private readonly ChatDbContext _dbContext;
 
@@ -13,17 +13,17 @@ internal class UserRepository : IRepository<UserModel>
         _dbContext = dbContext;
     }
     
-    public async Task<UserModel?> GetByIdAsync(Guid id)
+    public async Task<User?> GetByIdAsync(Guid id)
     {
         return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<List<UserModel>?> ListAsync()
+    public async Task<List<User>?> ListAsync()
     {
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<UserModel> AddAsync(UserModel entity, bool saveChanges = false)
+    public async Task<User> AddAsync(User entity, bool saveChanges = false)
     {
         var entityEntry = await _dbContext.Users.AddAsync(entity);
         
@@ -35,7 +35,7 @@ internal class UserRepository : IRepository<UserModel>
         return entityEntry.Entity;
     }
 
-    public async Task<bool> Update(UserModel entity, bool saveChanges = false)
+    public async Task<bool> Update(User entity, bool saveChanges = false)
     {
         var entityEntry = _dbContext.Users.Update(entity);
         
@@ -49,7 +49,7 @@ internal class UserRepository : IRepository<UserModel>
 
     public async Task<bool> Delete(Guid id, bool saveChanges = false)
     {
-        var entityEntry = _dbContext.Users.Remove(new UserModel { Id = id.ToString() });
+        var entityEntry = _dbContext.Users.Remove(new User { Id = id.ToString() });
         
         if (saveChanges)
         {

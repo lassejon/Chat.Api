@@ -1,20 +1,19 @@
 using System.Reflection;
 using Chat.Application.Interfaces;
-using Chat.Domain.Conversation;
+using Chat.Domain.Conversations;
+using Chat.Domain.Messages;
+using Chat.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using UserModel = Chat.Domain.User.User;
-using ConversationModel = Chat.Domain.Conversation.Conversation;
-using MessageModel = Chat.Domain.Message.Message;
 
 namespace Chat.Infrastructure.Persistence;
 
-public class ChatDbContext : IdentityDbContext<UserModel>, IUnitOfWork
+public class ChatDbContext : IdentityDbContext<User>, IUnitOfWork
 {
-    public override DbSet<UserModel> Users { get; set; } = null!;
-    public DbSet<ConversationModel> Conversations { get; set; } = null!;
-    public DbSet<MessageModel> Messages { get; set; } = null!;
-    public DbSet<Participant> Participants { get; set; } = null!;
+    public override DbSet<User> Users { get; set; } = null!;
+    public DbSet<Conversation> Conversations { get; set; } = null!;
+    public DbSet<Message> Message { get; set; } = null!;
+    //public DbSet<ConversationUser> ConversationUser { get; set; } = null!;
 
     public ChatDbContext(DbContextOptions options) : base(options)
     {

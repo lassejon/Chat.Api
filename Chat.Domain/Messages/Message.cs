@@ -1,4 +1,4 @@
-namespace Chat.Domain.Message;
+namespace Chat.Domain.Messages;
 
 public class Message
 {

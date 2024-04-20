@@ -1,4 +1,4 @@
-using Chat.Domain.Message;
+using Chat.Domain.Messages;
 
 namespace Chat.Application.Requests;
 

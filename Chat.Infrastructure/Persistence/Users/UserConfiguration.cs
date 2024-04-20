@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using UserModel = Chat.Domain.User.User;
+using Chat.Domain.Users;
 
-namespace Chat.Infrastructure.Persistence.User;
+namespace Chat.Infrastructure.Persistence.Users;
 
-public class UserConfiguration : IEntityTypeConfiguration<UserModel>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<UserModel> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
         builder
             .HasKey(u => u.Id)

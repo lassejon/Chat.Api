@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chat.Api.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    [Migration("20240420093437_InitialCreate")]
+    [Migration("20240420164229_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Chat.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Chat.Domain.Conversation.Conversation", b =>
+            modelBuilder.Entity("Chat.Domain.Conversations.Conversation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,22 +43,7 @@ namespace Chat.Api.Migrations
                     b.ToTable("Conversations");
                 });
 
-            modelBuilder.Entity("Chat.Domain.Conversation.Participant", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("UserId", "ConversationId");
-
-                    b.HasIndex("ConversationId");
-
-                    b.ToTable("Participants");
-                });
-
-            modelBuilder.Entity("Chat.Domain.Message.Message", b =>
+            modelBuilder.Entity("Chat.Domain.Messages.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,10 +68,10 @@ namespace Chat.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("Chat.Domain.User.User", b =>
+            modelBuilder.Entity("Chat.Domain.Users.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -175,12 +160,12 @@ namespace Chat.Api.Migrations
                     b.Property<Guid>("ConversationsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ParticipantsId")
+                    b.Property<string>("UsersId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ConversationsId", "ParticipantsId");
+                    b.HasKey("ConversationsId", "UsersId");
 
-                    b.HasIndex("ParticipantsId");
+                    b.HasIndex("UsersId");
 
                     b.ToTable("ConversationUser");
                 });
@@ -318,30 +303,15 @@ namespace Chat.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Chat.Domain.Conversation.Participant", b =>
+            modelBuilder.Entity("Chat.Domain.Messages.Message", b =>
                 {
-                    b.HasOne("Chat.Domain.Conversation.Conversation", null)
-                        .WithMany()
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Chat.Domain.User.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Chat.Domain.Message.Message", b =>
-                {
-                    b.HasOne("Chat.Domain.Conversation.Conversation", null)
+                    b.HasOne("Chat.Domain.Conversations.Conversation", null)
                         .WithMany("Messages")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -350,15 +320,15 @@ namespace Chat.Api.Migrations
 
             modelBuilder.Entity("ConversationUser", b =>
                 {
-                    b.HasOne("Chat.Domain.Conversation.Conversation", null)
+                    b.HasOne("Chat.Domain.Conversations.Conversation", null)
                         .WithMany()
                         .HasForeignKey("ConversationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
-                        .HasForeignKey("ParticipantsId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -374,7 +344,7 @@ namespace Chat.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -383,7 +353,7 @@ namespace Chat.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -398,7 +368,7 @@ namespace Chat.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,14 +377,14 @@ namespace Chat.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Chat.Domain.User.User", null)
+                    b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Chat.Domain.Conversation.Conversation", b =>
+            modelBuilder.Entity("Chat.Domain.Conversations.Conversation", b =>
                 {
                     b.Navigation("Messages");
                 });

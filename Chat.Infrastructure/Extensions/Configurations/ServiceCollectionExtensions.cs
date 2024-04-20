@@ -1,4 +1,4 @@
-﻿using Chat.Domain.User;
+﻿using Chat.Domain.Users;
 using Chat.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

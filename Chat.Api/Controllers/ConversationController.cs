@@ -46,6 +46,4 @@ public class ConversationController : ControllerBase
 
         return Ok(result);
     }
-    
-    
 }

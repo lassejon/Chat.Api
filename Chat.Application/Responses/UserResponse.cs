@@ -1,4 +1,4 @@
-using Chat.Domain.User;
+using Chat.Domain.Users;
 
 namespace Chat.Application.Responses;
 
