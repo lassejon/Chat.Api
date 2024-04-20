@@ -14,17 +14,17 @@ internal class MessageRepository : IRepository<Message>
     }
     public async Task<Message?> GetByIdAsync(Guid id)
     {
-        return await _dbContext.Message.FindAsync(id);
+        return await _dbContext.Messages.FindAsync(id);
     }
 
     public async Task<List<Message>?> ListAsync()
     {
-        return await _dbContext.Message.ToListAsync();
+        return await _dbContext.Messages.ToListAsync();
     }
 
     public async Task<Message> AddAsync(Message entity, bool saveChanges = false)
     {
-        var entityEntry = await _dbContext.Message.AddAsync(entity);
+        var entityEntry = await _dbContext.Messages.AddAsync(entity);
         
         if (saveChanges)
         {
@@ -36,7 +36,7 @@ internal class MessageRepository : IRepository<Message>
 
     public async Task<bool> Update(Message entity, bool saveChanges = false)
     {
-        var entityEntry = _dbContext.Message.Update(entity);
+        var entityEntry = _dbContext.Messages.Update(entity);
         
         if (saveChanges)
         {
@@ -48,7 +48,7 @@ internal class MessageRepository : IRepository<Message>
 
     public async Task<bool> Delete(Guid id, bool saveChanges = false)
     {
-        var entityEntry = _dbContext.Message.Remove(new Message { Id = id });
+        var entityEntry = _dbContext.Messages.Remove(new Message { Id = id });
         
         if (saveChanges)
         {

@@ -17,28 +17,18 @@ internal class ConversationRepository : IConversationRepository<Conversation>
     
     public async Task<List<Conversation>?> GetAllByUserIdAsync(Guid id)
     {
-        var user = await _dbContext.Users
-            .Include(u => u.Conversations)
-            .ThenInclude(c => c.Users)
-            .FirstOrDefaultAsync(u => u.Id == id.ToString());
+        var conversations = await _dbContext.Conversations
+            .Include(c => c.Participants)
+            .Where(c => c.Participants.Contains(new Participant { UserId = id.ToString() }))
+            .ToListAsync();
 
-        if (user is null)
-        {
-            throw new ArgumentException($"User with ID {id} not found.");
-        }
-
-        return user.Conversations;
+        return conversations;
     }
 
     public async Task AddParticipants(Guid id, IEnumerable<Guid> participantIds, bool saveChanges = false)
     {
-        //var participants = participantIds.Select(p => new ConversationUser { UserId = p.ToString(), ConversationId = id });
-        //await _dbContext.ConversationUser.AddRangeAsync(participants);
-        var conversation = await _dbContext.Conversations.FindAsync(id) ?? throw new ArgumentException($"Conversation with ID {id} not found.");
-        
-        conversation.Users.AddRange(participantIds.Select(p => new User { Id = p.ToString() }).ToList());
-        
-        _dbContext.Conversations.Update(conversation!);
+        var participants = participantIds.Select(p => new Participant { UserId = p.ToString(), ConversationId = id });
+        await _dbContext.Participants.AddRangeAsync(participants);
 
         if (saveChanges)
         {
@@ -49,7 +39,7 @@ internal class ConversationRepository : IConversationRepository<Conversation>
     public async Task<Conversation?> GetByIdAsync(Guid id)
     {
         return await _dbContext.Conversations
-            .Include(c => c.Users)
+            .Include(c => c.Participants)
             .Include(c => c.Messages)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
@@ -61,13 +51,11 @@ internal class ConversationRepository : IConversationRepository<Conversation>
 
     public async Task<Conversation> AddAsync(Conversation entity, bool saveChanges = false)
     {
-        var conversation = new Conversation(){ Id = entity.Id, Name = entity.Name };
-        //var participants = entity.Users.Select(p => new ConversationUser { UserId = p.Id.ToString(), ConversationId = entity.Id });
-        var messages = entity.Messages.Select(m => new Message { Id = m.Id, Content = m.Content, SentAt = m.SentAt, UserId = m.UserId, ConversationId = entity.Id });
-       
+        //var conversation = new Conversation(){ Id = entity.Id, Name = entity.Name };
+      
         //await _dbContext.ConversationUser.AddRangeAsync(participants);
-        await _dbContext.Message.AddRangeAsync(messages);
-        var entityEntry = await _dbContext.Conversations.AddAsync(conversation);
+        //await _dbContext.Messages.AddRangeAsync(entity.Messages);
+        var entityEntry = await _dbContext.Conversations.AddAsync(entity);
 
         if (saveChanges)
         {

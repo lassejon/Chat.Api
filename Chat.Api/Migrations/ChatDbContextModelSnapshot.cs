@@ -40,6 +40,21 @@ namespace Chat.Api.Migrations
                     b.ToTable("Conversations");
                 });
 
+            modelBuilder.Entity("Chat.Domain.Conversations.Participant", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserId", "ConversationId");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("Participants");
+                });
+
             modelBuilder.Entity("Chat.Domain.Messages.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -65,7 +80,7 @@ namespace Chat.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Message");
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Chat.Domain.Users.User", b =>
@@ -150,21 +165,6 @@ namespace Chat.Api.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ConversationUser", b =>
-                {
-                    b.Property<Guid>("ConversationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ConversationsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ConversationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -300,6 +300,25 @@ namespace Chat.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Chat.Domain.Conversations.Participant", b =>
+                {
+                    b.HasOne("Chat.Domain.Conversations.Conversation", "Conversation")
+                        .WithMany("Participants")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chat.Domain.Users.User", "User")
+                        .WithMany("Participants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Chat.Domain.Messages.Message", b =>
                 {
                     b.HasOne("Chat.Domain.Conversations.Conversation", null)
@@ -311,21 +330,6 @@ namespace Chat.Api.Migrations
                     b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ConversationUser", b =>
-                {
-                    b.HasOne("Chat.Domain.Conversations.Conversation", null)
-                        .WithMany()
-                        .HasForeignKey("ConversationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Chat.Domain.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -384,6 +388,13 @@ namespace Chat.Api.Migrations
             modelBuilder.Entity("Chat.Domain.Conversations.Conversation", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Participants");
+                });
+
+            modelBuilder.Entity("Chat.Domain.Users.User", b =>
+                {
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

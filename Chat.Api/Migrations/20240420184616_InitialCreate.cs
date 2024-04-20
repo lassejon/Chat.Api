@@ -175,31 +175,7 @@ namespace Chat.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConversationUser",
-                columns: table => new
-                {
-                    ConversationsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ConversationUser", x => new { x.ConversationsId, x.UsersId });
-                    table.ForeignKey(
-                        name: "FK_ConversationUser_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ConversationUser_Conversations_ConversationsId",
-                        column: x => x.ConversationsId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Message",
+                name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -210,15 +186,39 @@ namespace Chat.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_AspNetUsers_UserId",
+                        name: "FK_Messages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Message_Conversations_ConversationId",
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Participants",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Participants", x => new { x.UserId, x.ConversationId });
+                    table.ForeignKey(
+                        name: "FK_Participants_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Participants_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
                         principalColumn: "Id",
@@ -272,19 +272,19 @@ namespace Chat.Api.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConversationUser_UsersId",
-                table: "ConversationUser",
-                column: "UsersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Message_ConversationId",
-                table: "Message",
+                name: "IX_Messages_ConversationId",
+                table: "Messages",
                 column: "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_UserId",
-                table: "Message",
+                name: "IX_Messages_UserId",
+                table: "Messages",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participants_ConversationId",
+                table: "Participants",
+                column: "ConversationId");
         }
 
         /// <inheritdoc />
@@ -306,10 +306,10 @@ namespace Chat.Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ConversationUser");
+                name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "Participants");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

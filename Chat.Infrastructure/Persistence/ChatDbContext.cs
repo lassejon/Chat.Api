@@ -12,8 +12,8 @@ public class ChatDbContext : IdentityDbContext<User>, IUnitOfWork
 {
     public override DbSet<User> Users { get; set; } = null!;
     public DbSet<Conversation> Conversations { get; set; } = null!;
-    public DbSet<Message> Message { get; set; } = null!;
-    //public DbSet<ConversationUser> ConversationUser { get; set; } = null!;
+    public DbSet<Message> Messages { get; set; } = null!;
+    public DbSet<Participant> Participants { get; set; } = null!;
 
     public ChatDbContext(DbContextOptions options) : base(options)
     {

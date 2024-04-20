@@ -20,9 +20,9 @@ public record ConversationRequest(List<Guid> ParticipantIds, string Name, Messag
 {
     public Conversation ToConversation()
     {
-        var conversation = new Conversation { Id = Guid.NewGuid(), Name = Name, CreatedAt = DateTime.UtcNow };
+        var conversation = new Conversation { Name = Name, CreatedAt = DateTime.UtcNow };
         conversation.Messages.Add(Message.ToMessage());
-        conversation.Users.AddRange(ParticipantIds.Select(p => new User { Id = p.ToString() }));
+        conversation.Participants.AddRange(ParticipantIds.Select(id => new Participant { UserId = id.ToString(), ConversationId = conversation.Id }));
 
         return conversation;
     }
