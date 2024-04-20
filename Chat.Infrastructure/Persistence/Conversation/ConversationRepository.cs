@@ -30,9 +30,9 @@ internal class ConversationRepository : IConversationRepository<ConversationMode
 
     public async Task AddParticipants(Guid id, IEnumerable<Guid> participantIds, bool saveChanges = false)
     {
-        var participants = participantIds.Select(p => new Participant { UserId = p, ConversationId = id });
+        var participants = participantIds.Select(p => new Participant { UserId = p.ToString(), ConversationId = id });
         await _dbContext.Participants.AddRangeAsync(participants);
-        
+
         if (saveChanges)
         {
             await _dbContext.SaveChangesAsync();

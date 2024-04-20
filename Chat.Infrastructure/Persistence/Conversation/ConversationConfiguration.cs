@@ -10,10 +10,19 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Participant>
 {
     public void Configure(EntityTypeBuilder<Participant> builder)
     {
-        builder.HasKey(p => new { p.ConversationId, p.UserId });
-        // builder
-        //     .HasMany<UserModel>()
-        //     .WithMany(e => e.Conversations)
-        //     .UsingEntity(Participant);
+        builder
+            .HasKey(p => new { p.UserId, p.ConversationId });
+
+        builder
+            .HasOne<UserModel>()
+            .WithMany()
+            .HasForeignKey(p => p.UserId)
+            .IsRequired();
+
+        builder
+            .HasOne<ConversationModel>()
+            .WithMany()
+            .HasForeignKey(p => p.ConversationId)
+            .IsRequired();
     }
 }
