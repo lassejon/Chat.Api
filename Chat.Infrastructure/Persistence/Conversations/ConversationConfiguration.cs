@@ -26,17 +26,5 @@ public class ConversationConfiguration : IEntityTypeConfiguration<Conversation>
                     .OnDelete(DeleteBehavior.Cascade),
                 linkBuilder => linkBuilder.HasKey(Participants.UserId, Participants.ConversationId)
             );
-
-        //builder
-        //    .HasOne<User>()
-        //    .WithMany()
-        //    .HasForeignKey(p => p.UserId)
-        //    .IsRequired();
-
-        //builder
-        //    .HasOne<Conversation>()
-        //    .WithMany()
-        //    .HasForeignKey(p => p.ConversationId)
-        //    .IsRequired();
     }
 }
