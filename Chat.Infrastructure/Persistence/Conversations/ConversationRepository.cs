@@ -1,7 +1,6 @@
 using Chat.Application.Interfaces.Persistence;
 using Chat.Domain.Conversations;
 using Microsoft.EntityFrameworkCore;
-using Chat.Domain.Messages;
 using Chat.Domain.Users;
 
 namespace Chat.Infrastructure.Persistence.Conversations;
@@ -19,7 +18,8 @@ internal class ConversationRepository : IConversationRepository<Conversation>
     {
         var conversations = await _dbContext.Conversations
             .Include(c => c.Participants)
-            .Where(c => c.Participants.Contains(new Participant { UserId = id.ToString() }))
+            .Include(c => c.Messages)
+            .Where(c => c.Participants.Contains(new User { Id = id.ToString() }))
             .ToListAsync();
 
         return conversations;
@@ -27,8 +27,10 @@ internal class ConversationRepository : IConversationRepository<Conversation>
 
     public async Task AddParticipants(Guid id, IEnumerable<Guid> participantIds, bool saveChanges = false)
     {
-        var participants = participantIds.Select(p => new Participant { UserId = p.ToString(), ConversationId = id });
-        await _dbContext.Participants.AddRangeAsync(participants);
+        Conversation conversation = new() { Id = id };
+        conversation.Participants.AddRange(participantIds.Select(id => new User { Id = id.ToString() }));
+        _dbContext.Conversations.Attach(conversation);
+        _dbContext.Entry(conversation).Collection(c => c.Participants).IsModified = true;
 
         if (saveChanges)
         {
@@ -55,6 +57,7 @@ internal class ConversationRepository : IConversationRepository<Conversation>
       
         //await _dbContext.ConversationUser.AddRangeAsync(participants);
         //await _dbContext.Messages.AddRangeAsync(entity.Messages);
+        _dbContext.Users.AttachRange(entity.Participants);
         var entityEntry = await _dbContext.Conversations.AddAsync(entity);
 
         if (saveChanges)

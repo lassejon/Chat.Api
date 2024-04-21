@@ -205,21 +205,21 @@ namespace Chat.Api.Migrations
                 name: "Participants",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ConversationsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParticipantsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Participants", x => new { x.UserId, x.ConversationId });
+                    table.PrimaryKey("PK_Participants", x => new { x.ConversationsId, x.ParticipantsId });
                     table.ForeignKey(
-                        name: "FK_Participants_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Participants_AspNetUsers_ParticipantsId",
+                        column: x => x.ParticipantsId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Participants_Conversations_ConversationId",
-                        column: x => x.ConversationId,
+                        name: "FK_Participants_Conversations_ConversationsId",
+                        column: x => x.ConversationsId,
                         principalTable: "Conversations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -282,9 +282,9 @@ namespace Chat.Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participants_ConversationId",
+                name: "IX_Participants_ParticipantsId",
                 table: "Participants",
-                column: "ConversationId");
+                column: "ParticipantsId");
         }
 
         /// <inheritdoc />

@@ -5,12 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Chat.Infrastructure.Persistence.Conversations;
 
-public class ConversationConfiguration : IEntityTypeConfiguration<Participant>
+public class ConversationConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<Participant> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
         builder
-            .HasKey(p => new { p.UserId, p.ConversationId });
+            .HasMany(c => c.Conversations)
+            .WithMany(u => u.Participants)
+            .UsingEntity("Participants");
 
         //builder
         //    .HasOne<User>()

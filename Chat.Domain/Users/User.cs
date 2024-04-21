@@ -12,5 +12,5 @@ public class User : IdentityUser
     public string? LastName { get; set; }
 
     //public List<Conversation> Conversations { get; set; } = [];
-    public List<Participant> Participants { get; set; } = [];
+    public List<Conversation> Conversations { get; set; } = [];
 }

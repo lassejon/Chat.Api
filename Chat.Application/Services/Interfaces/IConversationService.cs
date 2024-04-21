@@ -22,8 +22,9 @@ public record ConversationRequest(List<Guid> ParticipantIds, string Name, Messag
     {
         var conversation = new Conversation { Name = Name, CreatedAt = DateTime.UtcNow };
         conversation.Messages.Add(Message.ToMessage());
-        conversation.Participants.AddRange(ParticipantIds.Select(id => new Participant { UserId = id.ToString(), ConversationId = conversation.Id }));
+        conversation.Participants.AddRange(ParticipantIds.Select(id => new User { Id = id.ToString() }));
 
         return conversation;
     }
 };
+
