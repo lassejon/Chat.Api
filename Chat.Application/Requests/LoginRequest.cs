@@ -1,4 +1,4 @@
-using Chat.Application.Errors;
+using Chat.Application.Attributes;
 
 namespace Chat.Application.Requests;
 

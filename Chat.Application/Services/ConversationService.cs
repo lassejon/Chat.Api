@@ -1,6 +1,7 @@
 using Chat.Application.Interfaces;
 using Chat.Application.Interfaces.Persistence;
 using Chat.Application.Requests;
+using Chat.Application.Results;
 using Chat.Application.Services.Interfaces;
 using Chat.Domain.Conversations;
 using Chat.Domain.Messages;
@@ -27,9 +28,11 @@ public class ConversationService : IConversationService
         return new ConversationResponse(conversation.Id, conversation.CreatedAt);
     }
     
-    public async Task AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds)
+    public async Task<Result> AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds)
     {
-        await _conversationRepository.AddParticipants(id, participantIds, saveChanges: true);
+        var (success, error) = await _conversationRepository.AddParticipants(id, participantIds, saveChanges: true);
+
+        return new Result(success, error);
     }
     
     public async Task AddMessageAsync(Guid id, MessageRequest messageRequest)

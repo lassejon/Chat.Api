@@ -287,15 +287,15 @@ namespace Chat.Api.Migrations
 
             modelBuilder.Entity("Participants", b =>
                 {
-                    b.Property<Guid>("ConversationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ParticipantsId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ConversationsId", "ParticipantsId");
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("ParticipantsId");
+                    b.HasKey("UserId", "ConversationId");
+
+                    b.HasIndex("ConversationId");
 
                     b.ToTable("Participants");
                 });
@@ -370,13 +370,13 @@ namespace Chat.Api.Migrations
                 {
                     b.HasOne("Chat.Domain.Conversations.Conversation", null)
                         .WithMany()
-                        .HasForeignKey("ConversationsId")
+                        .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Chat.Domain.Users.User", null)
                         .WithMany()
-                        .HasForeignKey("ParticipantsId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

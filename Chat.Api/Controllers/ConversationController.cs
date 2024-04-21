@@ -1,4 +1,5 @@
 using Chat.Api.Extensions;
+using Chat.Application.Extensions;
 using Chat.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,18 @@ public class ConversationController : ControllerBase
         var conversation = await _conversationService.GetConversationByIdAsync(id);
         return Ok(conversation);
     }
-    
+
+    [HttpPost("{id}/add-participants")]
+    public async Task<IActionResult> AddParticipantsAsync(Guid id, [FromBody] IEnumerable<Guid> participants)
+    {
+        var result = await _conversationService.AddParticipantsAsync(id, participants);
+
+        return result.Match<ObjectResult>(
+                onSuccess: result => Ok(result.Message),
+                onFailure: result => BadRequest(result.Message)
+            );
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetConversations()
     {

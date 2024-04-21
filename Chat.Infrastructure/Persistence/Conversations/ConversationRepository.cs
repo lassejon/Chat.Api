@@ -2,6 +2,7 @@ using Chat.Application.Interfaces.Persistence;
 using Chat.Domain.Conversations;
 using Microsoft.EntityFrameworkCore;
 using Chat.Domain.Users;
+using Chat.Domain.Joins;
 
 namespace Chat.Infrastructure.Persistence.Conversations;
 
@@ -25,16 +26,24 @@ internal class ConversationRepository : IConversationRepository<Conversation>
         return conversations;
     }
 
-    public async Task AddParticipants(Guid id, IEnumerable<Guid> participantIds, bool saveChanges = false)
+    public async Task<(bool success, string message)> AddParticipants(Guid id, IEnumerable<Guid> participantIds, bool saveChanges = false)
     {
-        Conversation conversation = new() { Id = id };
-        conversation.Participants.AddRange(participantIds.Select(id => new User { Id = id.ToString() }));
-        _dbContext.Conversations.Attach(conversation);
-        _dbContext.Entry(conversation).Collection(c => c.Participants).IsModified = true;
+        var rawSwl = $"INSERT INTO {nameof(Participants)} ({Participants.ConversationId}, {Participants.UserId}) VALUES {string.Join(",", participantIds.Select(userId => $"('{id}', '{userId}')"))}";
 
-        if (saveChanges)
+        try
         {
-            await _dbContext.SaveChangesAsync();
+            _dbContext.Database.ExecuteSqlRaw(rawSwl);
+            if (saveChanges)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+
+            return (true, "Participants added successfully");
+        }
+        catch (Exception e)
+        {
+
+            return (false, e.Message);
         }
     }
 
@@ -53,10 +62,6 @@ internal class ConversationRepository : IConversationRepository<Conversation>
 
     public async Task<Conversation> AddAsync(Conversation entity, bool saveChanges = false)
     {
-        //var conversation = new Conversation(){ Id = entity.Id, Name = entity.Name };
-      
-        //await _dbContext.ConversationUser.AddRangeAsync(participants);
-        //await _dbContext.Messages.AddRangeAsync(entity.Messages);
         _dbContext.Users.AttachRange(entity.Participants);
         var entityEntry = await _dbContext.Conversations.AddAsync(entity);
 

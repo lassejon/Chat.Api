@@ -1,4 +1,5 @@
 using Chat.Application.Requests;
+using Chat.Application.Results;
 using Chat.Domain.Conversations;
 using Chat.Domain.Messages;
 using Chat.Domain.Users;
@@ -8,7 +9,7 @@ namespace Chat.Application.Services.Interfaces;
 public interface IConversationService
 {
     Task<ConversationResponse> CreateConversationAsync(ConversationRequest conversationRequest);
-    Task AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds);
+    Task<Result> AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds);
     Task AddMessageAsync(Guid id, MessageRequest messageRequest);
     Task<List<Conversation>?> GetConversationsByUserIdAsync(Guid userId);
     Task<Conversation?> GetConversationByIdAsync(Guid id);

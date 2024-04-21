@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.Persistence;
-
+ 
 public class ChatDbContext : IdentityDbContext<User>, IUnitOfWork
 {
     public override DbSet<User> Users { get; set; } = null!;
@@ -29,5 +29,11 @@ public class ChatDbContext : IdentityDbContext<User>, IUnitOfWork
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.EnableSensitiveDataLogging();
     }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Chat.Application.Errors;
+namespace Chat.Application.Attributes;
 
 public class RequiredWithErrorMessageAttribute : RequiredAttribute
 {
