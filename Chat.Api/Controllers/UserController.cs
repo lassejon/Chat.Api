@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Chat.Api.Controllers;
 
 [ApiController]
-[Route("users")]
+[Route("api/[controller]s")]
 public class UserController : ControllerBase
 {
     private readonly UserManager<User> _userManager;

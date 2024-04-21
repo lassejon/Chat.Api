@@ -12,6 +12,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -44,8 +45,6 @@ builder.Services.AddJwtAuthentication(builder.Configuration["JWT:ValidAudience"]
 builder.Services
     .AddInfrastructure()
     .AddApplication();
-
-builder.Services.AddControllers();
 
 var app = builder.Build();
 

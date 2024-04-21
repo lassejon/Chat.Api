@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Chat.Api.Controllers;
 
 [ApiController]
-[Route("login")]
+[Route("api/[controller]")]
 public class LoginController : ControllerBase
 {
     private readonly ILoginService _loginService;

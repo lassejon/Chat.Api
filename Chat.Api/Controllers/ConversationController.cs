@@ -7,7 +7,7 @@ namespace Chat.Api.Controllers;
 
 [ApiController]
 [Authorize]
-[Route("api/[controller]")]
+[Route("api/[controller]s")]
 public class ConversationController : ControllerBase
 {
     private readonly IConversationService _conversationService;
