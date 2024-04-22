@@ -10,16 +10,10 @@ namespace Chat.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]s")]
-public class UserController : ControllerBase
+public class UserController(UserManager<User> userManager, ILoginService loginService) : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly ILoginService _loginService;
-
-    public UserController(UserManager<User> userManager, ILoginService loginService)
-    {
-        _userManager = userManager;
-        _loginService = loginService;
-    }
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly ILoginService _loginService = loginService;
 
     [Authorize]
     [HttpGet]

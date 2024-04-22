@@ -1,14 +1,10 @@
 ﻿namespace Chat.Application.Results
 {
-    public class Result : Result<object>
+    public class Result(bool isSuccess, string errorMessage) : Result<object>(isSuccess, errorMessage);
+    
+    public class Result<TValue> where TValue : class
     {
-        public Result(bool isSuccess, string errorMessage) : base(isSuccess, errorMessage)
-        {
-        }
-    }
-    public class Result<T> where T : class
-    {
-        private Result(bool isSuccess, Error error)
+        private Result(bool isSuccess, Error error, TValue? value = null)
         {
             if (isSuccess && error != Error.None ||
                 !isSuccess && error == Error.None)
@@ -18,26 +14,28 @@
 
             IsSuccess = isSuccess;
             Error = error;
+            Value = value;
         }
 
-        public Result(bool isSuccess, string message)
+        public Result(bool isSuccess, string message, TValue? value = null)
         {
             IsSuccess = isSuccess;
             Message = message;
+            Value = value;
         }
 
-        public T? Value { get; } = null;
+        public TValue? Value { get; } = null;
 
         public bool IsSuccess { get; }
 
         public bool IsFailure => !IsSuccess;
 
-        public string? Message { get; } = null;
-        public Error? Error { get; } = null;
+        public string? Message { get; }
+        public Error? Error { get; }
 
-        public static Result<T> Success() => new(true, Error.None);
+        public static Result<TValue> Success() => new(true, Error.None);
 
-        public static Result<T> Failure(Error error) => new(false, error);
+        public static Result<TValue> Failure(Error error) => new(false, error);
     }
 
     public sealed record Error(string Code, string Description)

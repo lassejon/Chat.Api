@@ -4,7 +4,7 @@ namespace Chat.Application.Extensions
 {
     public static class ResultExtensions
     {
-        public static TReturnType Match<TReturnType>(this Result result, Func<Result, TReturnType> onSuccess, Func<Result, TReturnType> onFailure)
+        public static TResult Match<TResult>(this Result result, Func<Result, TResult> onSuccess, Func<Result, TResult> onFailure)
         {
             return result.IsSuccess ? onSuccess(result) : onFailure(result);
         }

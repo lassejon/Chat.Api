@@ -39,8 +39,8 @@ public class ConversationController : ControllerBase
         var result = await _conversationService.AddParticipantsAsync(id, participants);
 
         return result.Match<ObjectResult>(
-                onSuccess: result => Ok(result.Message),
-                onFailure: result => BadRequest(result.Message)
+                onSuccess: r => Ok(r.Message),
+                onFailure: r => BadRequest(r.Message)
             );
     }
 
