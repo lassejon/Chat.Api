@@ -27,7 +27,7 @@ public class UserController(UserManager<User> userManager, ILoginService loginSe
             return NotFound($"User with id: {id} not found");
         }
 
-        var userModel = new UserResponse(user);
+        var userModel = new ParticipantResponse(user);
         return Ok(userModel);
     }
 

@@ -1,7 +1,3 @@
 namespace Chat.Application.Responses;
 
-public class RegistrationResponse
-{
-    public bool Success { get; set; }
-    public string? Message { get; set; }
-}
+public record RegistrationResponse(bool Success, string? Message);

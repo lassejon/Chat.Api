@@ -1,6 +1,7 @@
 using Chat.Application.Interfaces;
 using Chat.Application.Interfaces.Persistence;
 using Chat.Application.Requests;
+using Chat.Application.Responses;
 using Chat.Application.Results;
 using Chat.Application.Services.Interfaces;
 using Chat.Domain.Conversations;
@@ -10,11 +11,11 @@ namespace Chat.Application.Services;
 
 public class ConversationService : IConversationService
 {
-    private readonly IConversationRepository<Conversation> _conversationRepository;
+    private readonly IConversationRepository<Conversation, ConversationsResponse> _conversationRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IEntityRepository<Message> _messageRepository;
 
-    public ConversationService(IConversationRepository<Conversation> conversationRepository, IUnitOfWork unitOfWork, IEntityRepository<Message> messageRepository)
+    public ConversationService(IConversationRepository<Conversation, ConversationsResponse> conversationRepository, IUnitOfWork unitOfWork, IEntityRepository<Message> messageRepository)
     {
         _conversationRepository = conversationRepository;
         _unitOfWork = unitOfWork;
@@ -25,7 +26,7 @@ public class ConversationService : IConversationService
     {
         var conversation = await _conversationRepository.AddAsync(conversationRequest.ToConversation(), saveChanges: true);
 
-        return new ConversationResponse(conversation.Id, conversation.CreatedAt);
+        return new ConversationResponse(conversation.Id, conversation.Name, conversation.Messages.Select(m => new MessageResponse(m)), conversation.Participants.Select(p => new ParticipantResponse(p)));
     }
     
     public async Task<Result> AddParticipantsAsync(Guid id, IEnumerable<Guid> participantIds)
@@ -44,14 +45,14 @@ public class ConversationService : IConversationService
         await _unitOfWork.CommitChangesAsync();
     }
     
-    public async Task<Conversation?> GetConversationByIdAsync(Guid id)
+    public async Task<ConversationResponse?> GetConversationByIdAsync(Guid id)
     {
         var conversation = await _conversationRepository.GetByIdAsync(id);
 
-        return conversation;
+        return new ConversationResponse(conversation!);
     }
     
-    public async Task<List<Conversation>?> GetConversationsByUserIdAsync(Guid userId)
+    public async Task<List<ConversationsResponse>?> GetConversationsByUserIdAsync(Guid userId)
     {
         var conversations = await _conversationRepository.GetAllByUserIdAsync(userId);
 

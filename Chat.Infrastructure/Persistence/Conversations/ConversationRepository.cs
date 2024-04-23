@@ -3,10 +3,11 @@ using Chat.Domain.Conversations;
 using Microsoft.EntityFrameworkCore;
 using Chat.Domain.Users;
 using Chat.Domain.Joins;
+using Chat.Application.Responses;
 
 namespace Chat.Infrastructure.Persistence.Conversations;
 
-internal class ConversationRepository : IConversationRepository<Conversation>
+internal class ConversationRepository : IConversationRepository<Conversation, ConversationsResponse>
 {
     private readonly ChatDbContext _dbContext;
 
@@ -15,12 +16,22 @@ internal class ConversationRepository : IConversationRepository<Conversation>
         _dbContext = dbContext;
     }
     
-    public async Task<List<Conversation>?> GetAllByUserIdAsync(Guid id)
+    public async Task<List<ConversationsResponse>?> GetAllByUserIdAsync(Guid id)
     {
         var conversations = await _dbContext.Conversations
             .Include(c => c.Participants)
             .Include(c => c.Messages)
             .Where(c => c.Participants.Contains(new User { Id = id.ToString() }))
+            .Select(c => 
+                //var message = c.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault();
+                new ConversationsResponse
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Participants = c.Participants.Select(p => new ParticipantResponse(default, default, default) { Id = p.Id, FirstName = p.FirstName, LastName = p.LastName }).ToList(),
+                    LatestMessage = c.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault().Content,
+                    LatestMessageAt = c.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault().SentAt
+                })
             .ToListAsync();
 
         return conversations;

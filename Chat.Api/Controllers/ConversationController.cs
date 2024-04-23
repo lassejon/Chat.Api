@@ -1,5 +1,6 @@
 using Chat.Api.Extensions;
 using Chat.Application.Extensions;
+using Chat.Application.Responses;
 using Chat.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ public class ConversationController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType<ConversationResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateConversationAsync([FromBody] ConversationRequest conversation)
     {
         var result = await _conversationService.CreateConversationAsync(conversation);
@@ -27,6 +29,7 @@ public class ConversationController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType<ConversationResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetConversationByIdAsync(Guid id)
     {
         var conversation = await _conversationService.GetConversationByIdAsync(id);
@@ -34,6 +37,8 @@ public class ConversationController : ControllerBase
     }
 
     [HttpPost("{id}/add-participants")]
+    [ProducesResponseType<string>(StatusCodes.Status200OK)]
+    [ProducesResponseType<string>(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddParticipantsAsync(Guid id, [FromBody] IEnumerable<Guid> participants)
     {
         var result = await _conversationService.AddParticipantsAsync(id, participants);
@@ -45,6 +50,7 @@ public class ConversationController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType<List<ConversationResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetConversations()
     {
         var id = User.GetId();

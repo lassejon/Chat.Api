@@ -32,7 +32,7 @@ public class LoginService : ILoginService
 
         if (!await _userManager.CheckPasswordAsync(user!, model.Password!))
         {
-            return new JwtTokenResponse() { Success = false, Token = null };
+            return new JwtTokenResponse(null, null, false);
         }
         
         var userRoles = await _userManager.GetRolesAsync(user!);
@@ -49,7 +49,7 @@ public class LoginService : ILoginService
 
         var jwtSecurityToken = GetToken(authClaims);
 
-        return new JwtTokenResponse() { Success = true, Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken), ValidTo = jwtSecurityToken.ValidTo };
+        return new JwtTokenResponse(null, null, default) { Success = true, Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken), ValidTo = jwtSecurityToken.ValidTo };
     }
 
     public async Task<RegistrationResponse> Register(RegistrationRequest model, bool retry = true, int retries = 10, int trie = 0)
@@ -58,7 +58,7 @@ public class LoginService : ILoginService
         
         User user = new()
         {
-            UserName = model.Email, //$"{model.FirstName?.ReplaceWhitespace()}{model.LastName?.ReplaceWhitespace()}@{RandomGenerator.FourDigits()}",
+            UserName = model.Email,
             Email = model.Email,
             FirstName = model.FirstName,
             LastName = model.LastName
@@ -68,7 +68,7 @@ public class LoginService : ILoginService
 
         if (result.Succeeded)
         {
-            return new RegistrationResponse { Success = true, Message = "User created successfully!" };
+            return new RegistrationResponse(default, null) { Success = true, Message = "User created successfully!" };
         }
         
         if (retry && trie < retries)
@@ -76,8 +76,7 @@ public class LoginService : ILoginService
             return await Register(model, retry, retries, trie + 1);
         }
         
-        return new RegistrationResponse
-            { Success = false, Message = string.Join(", ", result.Errors.Select(e => e.Description)) };
+        return new RegistrationResponse(default, null) { Success = false, Message = string.Join(", ", result.Errors.Select(e => e.Description)) };
 
     }
 
