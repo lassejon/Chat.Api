@@ -6,9 +6,9 @@ using Chat.Domain.Messages;
 
 namespace Chat.Application.Services;
 
-public class MessageService(IRepository<Message> messageRepository) : IMessageService
+public class MessageService(IEntityRepository<Message> messageRepository) : IMessageService
 {
-    private readonly IRepository<Message> _messageRepository = messageRepository;
+    private readonly IEntityRepository<Message> _messageRepository = messageRepository;
 
     public async Task<Result> CreateMessageAsync(MessageRequest messageRequest)
     {

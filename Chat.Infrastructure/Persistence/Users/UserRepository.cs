@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.Persistence.Users;
 
-internal class UserRepository : IRepository<User>
+internal class UserRepository : IEntityRepository<User>
 {
     private readonly ChatDbContext _dbContext;
 

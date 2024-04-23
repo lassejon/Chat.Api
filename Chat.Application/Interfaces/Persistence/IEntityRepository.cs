@@ -1,6 +1,6 @@
 namespace Chat.Application.Interfaces.Persistence;
 
-public interface IRepository<TEntity> where TEntity : class
+public interface IEntityRepository<TEntity> where TEntity : class
 {
     Task<TEntity?> GetByIdAsync(Guid id);
     Task<List<TEntity>?> ListAsync();

@@ -12,9 +12,9 @@ public class ConversationService : IConversationService
 {
     private readonly IConversationRepository<Conversation> _conversationRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<Message> _messageRepository;
+    private readonly IEntityRepository<Message> _messageRepository;
 
-    public ConversationService(IConversationRepository<Conversation> conversationRepository, IUnitOfWork unitOfWork, IRepository<Message> messageRepository)
+    public ConversationService(IConversationRepository<Conversation> conversationRepository, IUnitOfWork unitOfWork, IEntityRepository<Message> messageRepository)
     {
         _conversationRepository = conversationRepository;
         _unitOfWork = unitOfWork;

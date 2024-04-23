@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.Persistence.Messages;
 
-internal class MessageRepository(ChatDbContext dbContext) : IRepository<Message>
+internal class MessageRepository(ChatDbContext dbContext) : IEntityRepository<Message>
 {
     public async Task<Message?> GetByIdAsync(Guid id)
     {
