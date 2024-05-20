@@ -5,6 +5,6 @@ namespace Chat.Application.Services.Interfaces;
 
 public interface ILoginService
 {
-    Task<JwtTokenResponse> TryLogin(LoginRequest model);
+    Task<AuthenticatedUserResponse> TryLogin(LoginRequest model);
     Task<RegistrationResponse> Register(RegistrationRequest model, bool retry = true, int retries = 10, int trie = 0);
 }

@@ -24,7 +24,7 @@ public class LoginService : ILoginService
         _configuration = configuration;
     }
 
-    public async Task<JwtTokenResponse> TryLogin(LoginRequest model)
+    public async Task<AuthenticatedUserResponse> TryLogin(LoginRequest model)
     {
         ValidateLoginModel(model);
         
@@ -32,7 +32,7 @@ public class LoginService : ILoginService
 
         if (!await _userManager.CheckPasswordAsync(user!, model.Password!))
         {
-            return new JwtTokenResponse(null, null, false);
+            return new AuthenticatedUserResponse { JwtToken = new JwtTokenResponse(null, null, false) };
         }
         
         var userRoles = await _userManager.GetRolesAsync(user!);
@@ -49,7 +49,15 @@ public class LoginService : ILoginService
 
         var jwtSecurityToken = GetToken(authClaims);
 
-        return new JwtTokenResponse(null, null, default) { Success = true, Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken), ValidTo = jwtSecurityToken.ValidTo };
+        return new AuthenticatedUserResponse
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            JwtToken = new JwtTokenResponse(Token: new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                ValidTo: jwtSecurityToken.ValidTo, Success: true)
+        };
     }
 
     public async Task<RegistrationResponse> Register(RegistrationRequest model, bool retry = true, int retries = 10, int trie = 0)

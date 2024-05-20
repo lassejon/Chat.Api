@@ -19,13 +19,13 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
-        var jwtTokenResponse = await _loginService.TryLogin(loginRequest);
+        var authenticatedUser = await _loginService.TryLogin(loginRequest);
 
-        if (!jwtTokenResponse.Success)
+        if (!authenticatedUser.JwtToken.Success)
         {
             return Unauthorized();
         }
 
-        return Ok(jwtTokenResponse);
+        return Ok(authenticatedUser);
     }
 }

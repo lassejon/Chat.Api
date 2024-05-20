@@ -62,7 +62,7 @@ internal class ConversationRepository : IConversationRepository<Conversation, Co
     {
         return await _dbContext.Conversations
             .Include(c => c.Participants)
-            .Include(c => c.Messages)
+            .Include(c => c.Messages.OrderBy(m => m.SentAt))
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
