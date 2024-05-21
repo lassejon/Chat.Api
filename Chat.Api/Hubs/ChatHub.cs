@@ -30,8 +30,8 @@ public class ChatHub : Hub<IChatClient>
     
     public async Task<MessageResponse> SendMessage(MessageRequest messageRequest)
     {
-        // var message = await _conversationService.AddMessageAsync(messageRequest);
-        var messageResponse = new MessageResponse(Id: Guid.NewGuid(), Content: messageRequest.Content, SentAt: DateTime.UtcNow, UserId: messageRequest.UserId.ToString(), ConversationId: messageRequest.ConversationId);
+        var message = await _conversationService.AddMessageAsync(messageRequest);
+        var messageResponse = new MessageResponse(message); //new MessageResponse(Id: Guid.NewGuid(), Content: messageRequest.Content, SentAt: DateTime.UtcNow, UserId: messageRequest.UserId.ToString(), ConversationId: messageRequest.ConversationId);
         
         await Clients.OthersInGroup(messageRequest.ConversationId.ToString()).ReceiveMessage(messageResponse);
 

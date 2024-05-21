@@ -5,6 +5,7 @@ using Chat.Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Api.Controllers;
 
@@ -29,6 +30,25 @@ public class UserController(UserManager<User> userManager, ILoginService loginSe
 
         var userModel = new ParticipantResponse(user);
         return Ok(userModel);
+    }
+    
+    [Authorize]
+    [HttpGet]
+    [Route("/search/{name}")]
+    [ProducesResponseType<List<ParticipantResponse>>(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUser(string name)
+    {
+        var users = await _userManager.Users
+            .Where(u => u.FirstName.Contains(name) || u.LastName.Contains(name))
+            .Select(u => new ParticipantResponse(u))
+            .ToListAsync();
+
+        if (users.Count == 0)
+        {
+            return NotFound($"User with name: {name} not found");
+        }
+
+        return Ok(users);
     }
 
     [HttpPost]
