@@ -2,11 +2,13 @@ using Chat.Application.Extensions.Configuration;
 using Chat.Infrastructure.Extensions.Configurations;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using Chat.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddSignalR();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -55,6 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"));
 }
 
+app.MapHub<ChatHub>("/chat");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 

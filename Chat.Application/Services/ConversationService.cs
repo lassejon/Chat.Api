@@ -36,13 +36,14 @@ public class ConversationService : IConversationService
         return new Result(success, error);
     }
     
-    public async Task AddMessageAsync(Guid id, MessageRequest messageRequest)
+    public async Task<Message> AddMessageAsync(MessageRequest messageRequest)
     {
         var message = messageRequest.ToMessage();
-        message.ConversationId = id;
         
         var messageAdded = await _messageRepository.AddAsync(message);
         await _unitOfWork.CommitChangesAsync();
+
+        return messageAdded;
     }
     
     public async Task<ConversationResponse?> GetConversationByIdAsync(Guid id)
