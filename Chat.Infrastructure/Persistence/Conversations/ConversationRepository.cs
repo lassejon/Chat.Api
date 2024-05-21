@@ -107,6 +107,6 @@ internal class ConversationRepository : IConversationRepository<Conversation, Co
             await _dbContext.SaveChangesAsync();
         }
         
-        return entityEntry.State == EntityState.Deleted;
+        return entityEntry.State == EntityState.Detached;
     }
 }

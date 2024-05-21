@@ -34,7 +34,7 @@ public class UserController(UserManager<User> userManager, ILoginService loginSe
     
     [Authorize]
     [HttpGet]
-    [Route("/search/{name}")]
+    [Route("search/{name}")]
     [ProducesResponseType<List<ParticipantResponse>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUser(string name)
     {

@@ -14,6 +14,7 @@ public interface IConversationService
     Task<Message> AddMessageAsync(MessageRequest messageRequest);
     Task<List<ConversationsResponse>?> GetConversationsByUserIdAsync(Guid userId);
     Task<ConversationResponse?> GetConversationByIdAsync(Guid id);
+    Task<bool> DeleteConversationAsync(Guid id);
 }
 
 public record ConversationRequest(List<Guid> ParticipantIds, string Name, MessageRequest Message)

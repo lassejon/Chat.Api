@@ -59,4 +59,9 @@ public class ConversationService : IConversationService
 
         return conversations;
     }
+    
+    public async Task<bool> DeleteConversationAsync(Guid id)
+    {
+        return await _conversationRepository.Delete(id, true);
+    }
 }
